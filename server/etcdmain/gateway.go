@@ -28,6 +28,15 @@ import (
 	"go.etcd.io/etcd/server/v3/proxy/tcpproxy"
 )
 
+/**
+
+网关代理服务
+
+对etcd集群的代理，用于多集群代理或单集群多节点负载均衡
+
+
+*/
+
 var (
 	gatewayListenAddr            string
 	gatewayEndpoints             []string
@@ -37,6 +46,8 @@ var (
 	gatewayRetryDelay            time.Duration
 	gatewayCA                    string
 )
+
+// server 命令行定义
 
 var rootCmd = &cobra.Command{
 	Use:        "etcd",
@@ -100,6 +111,7 @@ func startGateway(cmd *cobra.Command, args []string) {
 	// We use os.Args to show all the arguments (not only passed-through Cobra).
 	lg.Info("Running: ", zap.Strings("args", os.Args))
 
+	// 获取etcd集群节点信息
 	srvs := discoverEndpoints(lg, gatewayDNSCluster, gatewayCA, gatewayInsecureDiscovery, gatewayDNSClusterServiceName)
 	if len(srvs.Endpoints) == 0 {
 		// no endpoints discovered, fall back to provided endpoints
@@ -167,6 +179,7 @@ func startGateway(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
+	// 代理集群节点
 	tp := tcpproxy.TCPProxy{
 		Logger:          lg,
 		Listener:        l,

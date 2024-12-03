@@ -31,6 +31,13 @@ import (
 	"go.etcd.io/raft/v3/raftpb"
 )
 
+/**
+
+raft核心
+
+
+*/
+
 const (
 	// The max throughput of etcd will not exceed 100MB/s (100K * 1KB value).
 	// Assuming the RTT is around 10ms, 1MB max size is large enough.
@@ -82,25 +89,25 @@ type raftNode struct {
 
 	tickMu *sync.RWMutex
 	// timestamp of the latest tick
-	latestTickTs time.Time
-	raftNodeConfig
+	latestTickTs   time.Time // tickMu保护这个字段
+	raftNodeConfig           // 节点配置
 
 	// a chan to send/receive snapshot
-	msgSnapC chan raftpb.Message
+	msgSnapC chan raftpb.Message //用于发送和接收raftpb.Message类型的快照消息
 
 	// a chan to send out apply
-	applyc chan toApply
+	applyc chan toApply //用于发送toApply类型的应用消息
 
 	// a chan to send out readState
-	readStateC chan raft.ReadState
+	readStateC chan raft.ReadState //用于发送raft.ReadState类型的读状态消息
 
 	// utility
-	ticker *time.Ticker
+	ticker *time.Ticker // 触发tick事件
 	// contention detectors for raft heartbeat message
-	td *contention.TimeoutDetector
+	td *contention.TimeoutDetector //心跳 用于检测raft心跳消息的争用
 
-	stopped chan struct{}
-	done    chan struct{}
+	stopped chan struct{} //通知node停止
+	done    chan struct{} //通知node完成
 }
 
 type raftNodeConfig struct {

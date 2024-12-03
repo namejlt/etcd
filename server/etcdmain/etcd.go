@@ -255,6 +255,7 @@ func identifyDataDirOrDie(lg *zap.Logger, dir string) dirType {
 	return dirEmpty
 }
 
+// checkSupportArch 检测系统架构是否支持
 func checkSupportArch() {
 	lg, err := logutil.CreateDefaultZapLogger(zap.InfoLevel)
 	if err != nil {

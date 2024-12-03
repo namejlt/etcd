@@ -7,3 +7,18 @@
 - 提交日期 2024-12-03
 
 
+## 编译
+
+
+```
+
+go build -v -mod=readonly -o=etcd .\server\main.go
+
+./etcd -h
+
+```
+
+
+
+
+

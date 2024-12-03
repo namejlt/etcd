@@ -27,6 +27,8 @@ import (
 	"go.etcd.io/etcd/server/v3/etcdmain"
 )
 
+// main入口，加载命令行参数
+
 func main() {
 	etcdmain.Main(os.Args)
 }

@@ -87,7 +87,7 @@ func (tp *TCPProxy) Run() error {
 		tp.Logger.Info("ready to proxy client requests", zap.Strings("endpoints", eps))
 	}
 
-	go tp.runMonitor()
+	go tp.runMonitor() //保证远程节点的可用性
 	for {
 		in, err := tp.Listener.Accept()
 		if err != nil {
@@ -98,6 +98,7 @@ func (tp *TCPProxy) Run() error {
 	}
 }
 
+// pick 选择一个节点
 func (tp *TCPProxy) pick() *remote {
 	var weighted []*remote
 	var unweighted []*remote
@@ -163,7 +164,7 @@ func (tp *TCPProxy) serve(in net.Conn) {
 
 	for {
 		tp.mu.Lock()
-		remote := tp.pick()
+		remote := tp.pick() //选择一个可用的节点
 		tp.mu.Unlock()
 		if remote == nil {
 			break
@@ -173,7 +174,7 @@ func (tp *TCPProxy) serve(in net.Conn) {
 		if err == nil {
 			break
 		}
-		remote.inactivate()
+		remote.inactivate() //不可连接 标记为不可用
 		if tp.Logger != nil {
 			tp.Logger.Warn("deactivated endpoint", zap.String("address", remote.addr), zap.Duration("interval", tp.MonitorInterval), zap.Error(err))
 		}

@@ -28,7 +28,7 @@ func Main(args []string) {
 	if len(args) > 1 {
 		cmd := args[1]
 		switch cmd {
-		case "gateway", "grpc-proxy":
+		case "gateway", "grpc-proxy": //返回代理 相关命令
 			if err := rootCmd.Execute(); err != nil {
 				fmt.Fprint(os.Stderr, err)
 				os.Exit(1)
