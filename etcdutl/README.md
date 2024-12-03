@@ -3,6 +3,8 @@ etcdutl
 
 `etcdutl` is a command line administration utility for [etcd][etcd].
 
+etcd实用工具的入口点，用于管理etcd集群，直接操作etcd数据文件，不依赖etcd服务。
+
 It's designed to operate directly on etcd data files.
 For operations over a network, please use `etcdctl`.
 

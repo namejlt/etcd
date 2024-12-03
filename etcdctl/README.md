@@ -3,6 +3,8 @@ etcdctl
 
 `etcdctl` is a command line client for [etcd][etcd].
 
+命令行客户端，用于与etcd服务器交互，通过网络进行交互
+
 The v3 API is used by default on main branch. For the v2 API, make sure to set environment variable `ETCDCTL_API=2`. See also [READMEv2][READMEv2].
 
 If using released versions earlier than v3.4, set `ETCDCTL_API=3` to use v3 API.
