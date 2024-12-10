@@ -31,6 +31,19 @@ type (
 	TxnResponse     pb.TxnResponse
 )
 
+/**
+
+抽象kv操作方式
+
+- 基本kv
+- 租约kv，适用于需要自动过期的场景，例如分布式锁、服务发现中的临时节点等
+- 事务kv，适用于需要保证原子性和一致性的场景，例如分布式锁、分布式计数器等
+- 有序kv，适用于需要按顺序处理键值对的场景，例如分布式锁、配置管理等
+
+
+
+*/
+
 type KV interface {
 	// Put puts a key-value pair into etcd.
 	// Note that key,value can be plain bytes array and string is
