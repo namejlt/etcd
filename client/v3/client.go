@@ -40,6 +40,14 @@ import (
 	"go.etcd.io/etcd/client/v3/internal/resolver"
 )
 
+/**
+
+定义client结构
+
+new client 发起请求
+
+*/
+
 var (
 	ErrNoAvailableEndpoints = errors.New("etcdclient: no available endpoints")
 	ErrOldCluster           = errors.New("etcdclient: old cluster version")
@@ -47,35 +55,53 @@ var (
 
 // Client provides and manages an etcd v3 client session.
 type Client struct {
+	// Cluster 提供对集群操作的访问，例如成员管理和集群状态查询
 	Cluster
+	// KV 提供对键值存储操作的访问，例如获取、设置和删除键值对
 	KV
+	// Lease 提供对租约操作的访问，例如创建、撤销和查询租约
 	Lease
+	// Watcher 提供对键值变更的监视功能
 	Watcher
+	// Auth 提供对认证和授权操作的访问，例如用户管理和角色管理
 	Auth
+	// Maintenance 提供对维护操作的访问，例如快照和恢复
 	Maintenance
 
+	// conn 是到 etcd 服务器的 gRPC 连接
 	conn *grpc.ClientConn
 
-	cfg      Config
-	creds    grpccredentials.TransportCredentials
+	// cfg 是客户端的配置
+	cfg Config
+	// creds 是用于 gRPC 连接的传输凭据
+	creds grpccredentials.TransportCredentials
+	// resolver 是一个手动解析器，用于解析 etcd 端点
 	resolver *resolver.EtcdManualResolver
 
-	epMu      *sync.RWMutex
+	// epMu 是一个读写锁，用于保护 endpoints 字段
+	epMu *sync.RWMutex
+	// endpoints 是客户端已知的 etcd 端点列表
 	endpoints []string
 
-	ctx    context.Context
+	// ctx 是一个上下文对象，用于控制客户端的生命周期
+	ctx context.Context
+	// cancel 是一个函数，用于取消 ctx
 	cancel context.CancelFunc
 
-	// Username is a user name for authentication.
+	// Username 是用于认证的用户名
 	Username string
-	// Password is a password for authentication.
-	Password        string
+	// Password 是用于认证的密码
+	Password string
+	// authTokenBundle 是一个用于每个 RPC 调用的认证令牌包
 	authTokenBundle credentials.PerRPCCredentialsBundle
 
+	// callOpts 是一个 gRPC 调用选项列表
 	callOpts []grpc.CallOption
 
+	// lgMu 是一个读写锁，用于保护 lg 字段
 	lgMu *sync.RWMutex
-	lg   *zap.Logger
+	// lg 是一个日志记录器
+	lg *zap.Logger
 }
 
 // New creates a new etcdv3 client from a given configuration.
